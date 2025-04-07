@@ -2,7 +2,10 @@
 // Title: CalcCcode.c
 //-----------------------------
 // Purpose: This program calculates basic operations and display the result on 8 LEDS in binary
-// It receives its input values from a 4x4 (extended) keypad 
+// It receives its input values from a 4x4 (extended) keypad. The program sends a high value through 
+// one of the output bits in Port B and checks if it received anything from the input bits of Port B
+// if nothing was received then it checks the next column, if it is detected it translates it to
+// that specific key 
 // Dependencies: Header.h, stdio.h, stdlib.h, math.h, pic18f47k42.h
 // Compiler: XC8 (v3.0)
 // Author: Jair Pacheco
