@@ -9,8 +9,8 @@
 // Dependencies: Header.h, stdio.h, stdlib.h, math.h, pic18f47k42.h
 // Compiler: XC8 (v3.0)
 // Author: Jair Pacheco
-// OUTPUTS: Port D, Port B [0-3]
-// INPUTS: Port B[4-7]
+// OUTPUTS: Port D(connected to 8 LEDS), Port B [0-3](For keypad input testing), 8 LEDS
+// INPUTS: Port B[4-7](For keypad input testing), KEYPAD
 // Versions:
 //  	V1.0: 4/2/2025 - First version 
 //      V1.1: 4/5/2025 - adjusting keypad function to better allow loops
