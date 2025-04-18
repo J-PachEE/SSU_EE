@@ -1,8 +1,6 @@
 /* 
  * File:   Initialization.h
  * Author: jairp
- *
- * Created on April 17, 2025, 5:29 PM
  */
 
 #ifndef INITIALIZATION_H
