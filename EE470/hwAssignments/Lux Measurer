@@ -1,0 +1,110 @@
+//-------------------------------
+//Title: Lux Measuring circuit
+//-------------------------------
+//Program details: 
+//-------------------------------
+//Purpose: The program will measure lux and alert the user 
+// if it gets too dark or gets too bright
+//Input: Light
+//Outputs:Buzzer beep(If gets too dark), RGB LED (If it gets too bright)
+//Date: 9/28/2025
+//Compiler: Platform IO
+//Author: Jair Pacheco
+//Versions:
+// V1: First Attempt
+// V2: RGB color is now Hardcoded instead, since function was not work implementing
+// V3: It is now calibrated using a Lux measurement app as reference
+//---------------------------------
+//File Dependencies: Arduino.h
+//---------------------------------
+
+
+//---------------------------------
+//Main Program
+//---------------------------------
+
+#include <Arduino.h>
+
+int lux_lower = 50;
+int lux_higher = 800;
+int lux_meas;
+int RGB_PWM = 0;
+
+int lux_adc = A0;
+float lux_volt ;
+
+int buzzer = D4;
+
+int RGB_R = D5;
+int RGB_G = D6;
+int RGB_B = D7;
+
+String input="";
+
+
+void setup() {
+ pinMode(lux_adc, INPUT);
+ pinMode(RGB_R, OUTPUT);
+ pinMode(RGB_G, OUTPUT);
+ pinMode(RGB_B, OUTPUT);
+ pinMode(buzzer, OUTPUT);
+  analogWrite(RGB_R,1023);
+  analogWrite(RGB_G,1023);
+  analogWrite(RGB_B,1023);
+ Serial.begin(9600);
+}
+
+
+
+void loop() {
+  lux_meas = analogRead(lux_adc);
+  lux_volt = lux_meas *(3.3/1023);
+///////////////////////////////////////////////////////////
+  // float RLDR = (10000.0 * lux_volt) / (3.3 - lux_volt);
+  // float RLDR_kOhm = RLDR / 1000.0;
+  // int lux = (int)(900 * pow(RLDR_kOhm, -1.4)); 
+///////////////////////////////////////////////////////////
+  int lux = (log(lux_volt/3852)/-3.9); 
+  Serial.println(lux);
+  //Serial.println(lux_meas);
+  if (lux < lux_lower){
+    digitalWrite(buzzer,HIGH);
+  }
+  if (lux>=100){
+    digitalWrite(buzzer,LOW);
+  }
+  if (lux>150){ 
+    RGB_PWM = 900;
+    if(lux>300){
+    RGB_PWM = 600;
+    if(lux>450){
+    RGB_PWM = 200;
+    if(lux>600){
+    RGB_PWM = 100;
+    if(lux>750){
+    RGB_PWM = 50;
+    if(lux>900){
+    RGB_PWM = 0;  
+    }  
+    }  
+    }  
+    }  
+    }
+    //Im aware that the pulse width modulation is very ugly but it works.
+  } 
+  else{
+    RGB_PWM = 1023;
+  }
+  
+  analogWrite(RGB_B,(RGB_PWM));
+  analogWrite(RGB_G,(RGB_PWM));
+  if (Serial.available() > 0) { 
+     input = Serial.readStringUntil('\n'); // Read until newline
+    if(input == "B"){
+      digitalWrite(buzzer,HIGH);
+      delay(5000);
+    }
+  }  
+  delay(500);
+}
+
