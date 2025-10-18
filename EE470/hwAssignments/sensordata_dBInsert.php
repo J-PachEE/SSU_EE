@@ -11,7 +11,7 @@ $password = 'Jairpacheco6075';
 
 $conn = new mysqli($host, $username, $password, $dbname);
 if ($conn->connect_error) {
-    die("❌ Connection failed: " . $conn->connect_error);
+    die("Connection failed: " . $conn->connect_error);
 }
 
 // Extract and decode raw BASE64 query string
@@ -47,16 +47,16 @@ if (!$timeReceived) {
 
 // Validate required fields
 if (!$nodeName || $temperature === null || $humidity === null) {
-    die("❌ Missing required parameters.");
+    die("Missing required parameters.");
 }
 if (strlen($nodeName) > 10) {
-    die("❌ Node name exceeds 10 characters.");
+    die("Node name exceeds 10 characters.");
 }
 if (!is_numeric($temperature) || $temperature < -10 || $temperature > 100 || strlen((string)$temperature) > 6) {
-    die("❌ Invalid temperature. Must be -10 to 100°C.");
+    die("Invalid temperature. Must be -10 to 100°C.");
 }
 if (!is_numeric($humidity) || $humidity < 0 || $humidity > 100 || strlen((string)$humidity) > 6) {
-    die("❌ Invalid humidity. Must be 0 to 100%.");
+    die("Invalid humidity. Must be 0 to 100%.");
 }
 
 // Check if node is registered
@@ -65,7 +65,7 @@ $checkNode->bind_param("s", $nodeName);
 $checkNode->execute();
 $checkNode->store_result();
 if ($checkNode->num_rows === 0) {
-    die("❌ Node not registered.");
+    die("Node not registered.");
 }
 $checkNode->close();
 
@@ -75,7 +75,7 @@ $checkDuplicate->bind_param("ss", $nodeName, $timeReceived);
 $checkDuplicate->execute();
 $checkDuplicate->store_result();
 if ($checkDuplicate->num_rows > 0) {
-    die("❌ Duplicate entry for this node and timestamp.");
+    die("Duplicate entry for this node and timestamp.");
 }
 $checkDuplicate->close();
 
@@ -84,9 +84,9 @@ $insert = $conn->prepare("INSERT INTO sensor_data (node_name, time_received, tem
 $insert->bind_param("ssii", $nodeName, $timeReceived, $temperature, $humidity);
 
 if ($insert->execute()) {
-    echo "✅ Data inserted successfully: $nodeName at $timeReceived";
+    echo "Data inserted successfully: $nodeName at $timeReceived";
 } else {
-    echo "❌ Insert failed: " . $conn->error;
+    echo "Insert failed: " . $conn->error;
 }
 
 $insert->close();
