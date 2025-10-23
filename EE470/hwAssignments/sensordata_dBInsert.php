@@ -4,10 +4,10 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 // Database connection
-$host = 'localhost';
-$dbname = 'u997870193_jairpacheco';
-$username = 'u997870193_db_jairpacheco';
-$password = 'Jairpacheco6075';
+$host = '**********';
+$dbname = '***************';
+$username = '***************';
+$password = '*****************';
 
 $conn = new mysqli($host, $username, $password, $dbname);
 if ($conn->connect_error) {
