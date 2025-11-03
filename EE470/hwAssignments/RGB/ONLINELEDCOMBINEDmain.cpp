@@ -1,3 +1,26 @@
+//-------------------------------
+// Title: Unified ESP8266 Control for LED, RGB, and Webhook
+//-------------------------------
+// Program Details:
+//-------------------------------
+// Purpose: This program integrates three functions into a single ESP8266 sketch:
+// 1. Reads LED status from a remote JSON file and updates a physical LED
+// 2. Reads RGB intensity from a remote file and updates an RGB LED
+// 3. Sends a webhook message to IFTTT when a button is pressed
+// Inputs: Two physical buttons (D1 for LED/RGB, D0 for webhook trigger)
+// Outputs: LED ON/OFF, RGB LED, IFTTT message
+// Date: 11/3/2025
+// Compiler: PlatformIO
+// Author: Jair Pacheco
+// Versions:
+// V1: Initial integration of LED, RGB, and webhook functions
+//---------------------------------
+// File Dependencies: Arduino.h, ESP8266WiFi.h, ESP8266HTTPClient.h, WiFiClientSecure.h, ArduinoJson.h
+//---------------------------------
+
+//---------------------------------
+// Main Program
+//---------------------------------
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
@@ -7,12 +30,12 @@
 const char* ssid = "iPhone";
 const char* password = "Jpach6075";
 
-// URLs
+// Remote URLs for LED, RGB, and webhook
 const char* ledUrl = "https://jairpacheco.com/results.txt";
 const char* rgbUrl = "https://jairpacheco.com/rgb.txt";
 const char* webhookUrl = "https://maker.ifttt.com/trigger/Button_pressed/with/key/lnsgEOIZYpEjYtlc2KFSe9ZxtNinxfgHt1LSm3pWPo2";
 
-// Pins
+
 const int ledPin = D2;
 const int redPin = D7;
 const int greenPin = D6;
@@ -20,7 +43,7 @@ const int bluePin = D5;
 const int buttonStatus = D1;
 const int buttonWebhook = D0;
 
-
+// Reads LED status and RGB value from server and updates hardware
 void syncLEDandRGB() {
   WiFiClientSecure client;
   client.setInsecure();
@@ -43,7 +66,7 @@ if (!error) {
   }
   http.end();
 
-  // RGB value
+    // Fetch RGB value from server
   http.begin(client, rgbUrl);
   if (http.GET() == 200) {
     int red = http.getString().toInt();
@@ -55,7 +78,7 @@ if (!error) {
   http.end();
 }
 
-
+// Sends a webhook message to IFTTT when button is pressed
 void sendWebhookMessage() {
   WiFiClientSecure client;
   client.setInsecure();
@@ -69,6 +92,7 @@ void sendWebhookMessage() {
   http.end();
 }
 
+// Forward declarations
 void syncLEDandRGB();
 void sendWebhookMessage();
 
@@ -81,7 +105,7 @@ void setup() {
   pinMode(bluePin, OUTPUT);
   pinMode(buttonStatus, INPUT);
   pinMode(buttonWebhook, INPUT);
-
+ // Connect to Wi-Fi
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) delay(500);
   Serial.println("WiFi connected");
@@ -93,7 +117,7 @@ void loop() {
   bool currentStatus = digitalRead(buttonStatus);
   bool currentWebhook = digitalRead(buttonWebhook);
 
-  // LED/RGB sync
+  // LED/RGB 
   if (lastStatus == HIGH && currentStatus == LOW) {
     syncLEDandRGB();
   }
