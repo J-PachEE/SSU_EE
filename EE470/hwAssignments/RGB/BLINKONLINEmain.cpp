@@ -1,3 +1,6 @@
+
+
+
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
@@ -5,7 +8,7 @@
 
 const char* ssid = "iPhone";
 const char* password = "Jpach6075";
-const char* url = "https://jairpacheco.com/results.txt"; // Replace with your actual URL results.txt
+const char* url = "https://jairpacheco.com/results.txt"; 
 
 const int ledPin = D2;
 const int switchPin = D1;
@@ -13,7 +16,7 @@ const int switchPin = D1;
 void setup() {
   Serial.begin(9600);
   pinMode(ledPin, OUTPUT);
-  pinMode(switchPin, INPUT); // Use pull-down resistor externally
+  pinMode(switchPin, INPUT); 
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) delay(500);
   Serial.println("WiFi connected");
