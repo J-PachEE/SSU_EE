@@ -1,3 +1,27 @@
+//-------------------------------
+// Title: ESP8266 RGB LED online sync
+//-------------------------------
+// Program Details:
+//-------------------------------
+// Purpose: This program reads a remote file containing an RGB intensity value (red channel only)
+// and updates the RGB LED accordingly. It triggers either every 30 seconds or when a button is pressed.
+// Input: Button press (D1)
+// Output: RGB LED intensity (red channel)
+// Date: 11/3/2025
+// Compiler: PlatformIO
+// Author: Jair Pacheco
+// Versions:
+// V1: Initial implementation with timed and manual sync
+// V2: Added HTTPS support and serial debug output
+// V3: RGB control simplified to red channel only
+//---------------------------------
+// File Dependencies: Arduino.h, ESP8266WiFi.h, ESP8266HTTPClient.h, WiFiClientSecure.h
+//---------------------------------
+
+
+//---------------------------------
+// Main Program
+//---------------------------------
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
@@ -22,16 +46,19 @@ void setup() {
   pinMode(greenPin, OUTPUT);
   pinMode(bluePin, OUTPUT);
   pinMode(buttonPin, INPUT);
+   // Connect to Wi-Fi
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) delay(500);
   Serial.println("WiFi connected");
 }
 
 void loop() {
+   // Track time and button state for sync triggers
   static unsigned long lastCheck = 0;
   static bool lastButton = LOW;
   bool currentButton = digitalRead(buttonPin);
 
+  // Trigger sync every 30 seconds or on button press
   if ((millis() - lastCheck > 30000) || (lastButton == LOW && currentButton == HIGH)) {
     lastCheck = millis();
     Serial.println("Checking LED and RGB status...");
